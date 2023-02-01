@@ -5,23 +5,23 @@
 #include <stdlib.h>
 using namespace std;
 
-bool endsWith(std::string const& str, std::string const& suffix) {
+bool endsWith(string const& str, string const& suffix) {
     if (str.length() < suffix.length()) {
         return false;
     }
     return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
 }
 
-std::string readFile(const std::string& fileName) {
-    std::ifstream f(fileName);
+string readFile(const string& fileName) {
+    ifstream f(fileName);
     if (!f.is_open())
     {
         cout << "Error! File not found!" << endl;
         exit(0);
     }
-    f.seekg(0, std::ios::end);
+    f.seekg(0, ios::end);
     size_t size = f.tellg();
-    std::string s;
+    string s;
     s.resize(size);
     f.seekg(0);
     f.read(&s[0], size);
