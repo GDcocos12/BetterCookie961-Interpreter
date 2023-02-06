@@ -3,35 +3,36 @@
 #include <vector>
 #include <fstream>
 #include <stdlib.h>
-using namespace std;
+//using namespace std;
 
-bool endsWith(string const& str, string const& suffix) {
+std::vector<int> array{0};
+
+bool endsWith(std::string const& str, std::string const& suffix) {
     if (str.length() < suffix.length()) {
         return false;
     }
     return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
 }
 
-string readFile(const string& fileName) {
-    ifstream f(fileName);
+std::string readFile(const std::string& fileName) {
+    std::ifstream f(fileName);
     if (!f.is_open())
     {
-        cout << "Error! File not found!" << endl;
+        std::cout << "Error! File not found!" << std::endl;
         exit(0);
     }
-    f.seekg(0, ios::end);
+    f.seekg(0, std::ios::end);
     size_t size = f.tellg();
-    string s;
+    std::string s;
     s.resize(size);
     f.seekg(0);
     f.read(&s[0], size);
     return s;
 }
 
-void ifFunc(string code, vector<int>& array, int pl);
+void ifFunc(std::string code, int pl);
 
-void interpret(string code) {
-    vector<int> array = { 0 };
+void interpret(std::string code) {
     int pointerLocation = 0;
     int i = 0;
     int c = 0;
@@ -82,28 +83,28 @@ void interpret(string code) {
         }
         else if (code[i] == '(') {
             int ifend = i + 1;
-            string to_execute = "";
+            std::string to_execute = "";
             while (code[ifend] != ')') {
                 to_execute += code[ifend];
                 ifend++;
                 i++;
             }
-            ifFunc(to_execute, array, pointerLocation);
+            ifFunc(to_execute, pointerLocation);
         }
         else if (code[i] == '9') {
-            cout << char(array[pointerLocation]);
+            std::cout << char(array[pointerLocation]);
         }
         else if (code[i] == 'a') {
-            cout << array[pointerLocation] << " " << char(array[pointerLocation]) << endl;
+            std::cout << array[pointerLocation] << " " << char(array[pointerLocation]) << std::endl;
         }
         else if (code[i] == 'e') {
-            string x;
-            cin >> x;
+            std::string x;
+            std::cin >> x;
             int y;
             try {
-                y = stoi(x);
+                y = std::stoi(x);
             }
-            catch (invalid_argument) {
+            catch (std::invalid_argument) {
                 y = int(x[0]);
             }
             array[pointerLocation] = y;
@@ -137,15 +138,15 @@ void interpret(string code) {
         }
         i += 1;
     }
-    cout << " " << endl;
+    std::cout << " " << std::endl;
 }
 
-void ifFunc(string code, vector<int>& array, int pl) {
+void ifFunc(std::string code, int pl) {
     int nums[2];
     int action = 0;
     int pointnow = 0;
     bool ends = false;
-    string execute = "";
+    std::string execute = "";
     for (int i = 0; i < code.length(); i++) {
         if (code[i] == 'i') {
             nums[pointnow] = array[pl - 1];
@@ -208,22 +209,22 @@ void ifFunc(string code, vector<int>& array, int pl) {
         }
     }
     else {
-        cout << "Error! If without body!" << endl;
+        std::cout << "Error! If without body!" << std::endl;
     }
 }
 
 int main()
 {
     int mode = 0;
-    cout << "Mode(1 - compiler, 2 - interpreter): ";
-    cin >> mode;
+    std::cout << "Mode(1 - compiler, 2 - interpreter): ";
+    std::cin >> mode;
     if (mode == 1)
     {
-        cout << "Welcome to Better Cookie961 language Compiler v2.0" << endl;
-        cout << " " << endl;
-        string foil;
-        cout << "File Name: ";
-        cin >> foil;
+        std::cout << "Welcome to Better Cookie961 language Compiler v2.1" << std::endl;
+        std::cout << " " << std::endl;
+        std::string foil;
+        std::cout << "File Name: ";
+        std::cin >> foil;
         if (endsWith(foil, ".bc961"))
         {
             interpret(readFile(foil));
@@ -231,19 +232,19 @@ int main()
         }
         else
         {
-            cout << "Error! Unknown extension.";
+            std::cout << "Error! Unknown extension.";
             exit(0);
         }
     }
     else
     {
-        cout << "Welcome to Better Cookie961 language Shell v2.0" << endl;
-        cout << " " << endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v2.1" << std::endl;
+        std::cout << " " << std::endl;
         while (true)
         {
-            string code;
-            cout << "Code: ";
-            getline(cin, code);
+            std::string code;
+            std::cout << "Code: ";
+            std::getline(std::cin, code);
             interpret(code);
         }
     }
