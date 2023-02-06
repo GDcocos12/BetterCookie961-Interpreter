@@ -28,6 +28,8 @@ string readFile(const string& fileName) {
     return s;
 }
 
+void ifFunc(string code, vector<int>& array, int pl);
+
 void interpret(string code) {
     vector<int> array = { 0 };
     int pointerLocation = 0;
@@ -73,6 +75,20 @@ void interpret(string code) {
             if (array[pointerLocation] > 10) {
                 array[pointerLocation] -= 10;
             }
+        }
+        else if (code[i] == 'L')
+        {
+            array[pointerLocation] = 0;
+        }
+        else if (code[i] == '(') {
+            int ifend = i + 1;
+            string to_execute = "";
+            while (code[ifend] != ')') {
+                to_execute += code[ifend];
+                ifend++;
+                i++;
+            }
+            ifFunc(to_execute, array, pointerLocation);
         }
         else if (code[i] == '9') {
             cout << char(array[pointerLocation]);
@@ -124,6 +140,78 @@ void interpret(string code) {
     cout << " " << endl;
 }
 
+void ifFunc(string code, vector<int>& array, int pl) {
+    int nums[2];
+    int action = 0;
+    int pointnow = 0;
+    bool ends = false;
+    string execute = "";
+    for (int i = 0; i < code.length(); i++) {
+        if (code[i] == 'i') {
+            nums[pointnow] = array[pl - 1];
+            pointnow += 1;
+        }
+        else if (code[i] == 'k') {
+            nums[pointnow] = array[pl + 1];
+            pointnow += 1;
+        }
+        else if (code[i] == 't') {
+            nums[pointnow] = array[pl];
+            pointnow += 1;
+        }
+        else if (code[i] == '>') {
+            action = 1;
+        }
+        else if (code[i] == '<') {
+            action = 2;
+        }
+        else if (code[i] == '=') {
+            action = 0;
+        }
+        else if (code[i] == '!') {
+            execute = code.substr(i + 1, code.length());
+            bool anif1 = false;
+            bool anif2 = false;
+            for (int p = 0; p < execute.length(); p++) {
+                if (execute[p] == '(') {
+                    anif1 = true;
+                    for (int j = 0; j < execute.length(); j++) {
+                        if (execute[j] == ')') {
+                            anif2 = true;
+                        }
+                    }
+                }
+            }
+            if (anif1 == true && anif2 == false)
+            {
+                execute += ')';
+            }
+            ends = true;
+            break;
+        }
+    }
+    if (ends == true) {
+        if (action == 0) {
+            if (nums[0] == nums[1]) {
+                interpret(execute);
+            }
+        }
+        else if (action == 1) {
+            if (nums[0] > nums[1]) {
+                interpret(execute);
+            }
+        }
+        else if (action == 2) {
+            if (nums[0] < nums[1]) {
+                interpret(execute);
+            }
+        }
+    }
+    else {
+        cout << "Error! If without body!" << endl;
+    }
+}
+
 int main()
 {
     int mode = 0;
@@ -131,7 +219,7 @@ int main()
     cin >> mode;
     if (mode == 1)
     {
-        cout << "Welcome to Better Cookie961 language Compiler v1.0" << endl;
+        cout << "Welcome to Better Cookie961 language Compiler v2.0" << endl;
         cout << " " << endl;
         string foil;
         cout << "File Name: ";
@@ -149,13 +237,13 @@ int main()
     }
     else
     {
-        cout << "Welcome to Better Cookie961 language Shell v1.0" << endl;
+        cout << "Welcome to Better Cookie961 language Shell v2.0" << endl;
         cout << " " << endl;
         while (true)
         {
             string code;
             cout << "Code: ";
-            cin >> code;
+            getline(cin, code);
             interpret(code);
         }
     }
