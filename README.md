@@ -32,7 +32,7 @@ BetterCookie961 has 8 basic instructions:
 * `i` - left cookie value
 * `k` - right cookie value
 * `t` - current cookie value
-Example: (k > i ! cca) = {if (k > a): do cca}
+Example: (k > i ! cca) = {if (k > i): do cca}
 
 ATTENTION! Before calling the IF, "create" all the cookies you need (move to them)!
 Example: cc(k > i ! cca) - ERROR, because right cookie does not exist. kkki(k > i ! cca) - SUCCESS, right and left cookies exist.
