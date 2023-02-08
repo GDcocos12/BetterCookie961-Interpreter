@@ -3,9 +3,11 @@
 #include <vector>
 #include <fstream>
 #include <stdlib.h>
-//using namespace std;
+#include <ctime>
+#include <time.h>
 
 std::vector<int> array{0};
+int pointerLocation = 0;
 
 bool endsWith(std::string const& str, std::string const& suffix) {
     if (str.length() < suffix.length()) {
@@ -30,10 +32,11 @@ std::string readFile(const std::string& fileName) {
     return s;
 }
 
-void ifFunc(std::string code, int pl);
+void ifFunc(std::string code);
+void arythm(std::string code);
 
 void interpret(std::string code) {
-    int pointerLocation = 0;
+    srand(time(NULL));
     int i = 0;
     int c = 0;
     while (i < code.length()) {
@@ -61,6 +64,15 @@ void interpret(std::string code) {
             }
             array[pointerLocation] += array[pointerLocation - 1];
         }
+        else if (code[i] == 'N') {
+            pointerLocation = 0;
+        }
+        else if (code[i] == 'n') {
+            std::cout << array[pointerLocation];
+        }
+        else if (code[i] == 'R') {
+            array[pointerLocation] = rand() % 100;
+        }
         else if (code[i] == 'c') {
             array[pointerLocation] += 1;
         }
@@ -71,6 +83,10 @@ void interpret(std::string code) {
             if (array[pointerLocation] > 0) {
                 array[pointerLocation] -= 1;
             }
+        }
+        else if (code[i] == '>')
+        {
+            std::cout << std::endl;
         }
         else if (code[i] == 'O') {
             if (array[pointerLocation] > 10) {
@@ -89,7 +105,17 @@ void interpret(std::string code) {
                 ifend++;
                 i++;
             }
-            ifFunc(to_execute, pointerLocation);
+            ifFunc(to_execute);
+        }
+        else if (code[i] == '{') {
+            int arend = i + 1;
+            std::string to_count = "";
+            while (code[arend] != '}') {
+                to_count += code[arend];
+                arend++;
+                i++;
+            }
+            arythm(to_count);
         }
         else if (code[i] == '9') {
             std::cout << char(array[pointerLocation]);
@@ -141,7 +167,68 @@ void interpret(std::string code) {
     std::cout << " " << std::endl;
 }
 
-void ifFunc(std::string code, int pl) {
+void arythm(std::string code) {
+    int nums[1024];
+    std::vector<int> actions;
+    int pointnow = 0;
+    bool actyes = false;
+
+    for (int i = 0; i < code.length(); i++)
+    {
+        if (code[i] == 'k') {
+            nums[pointnow] = array[pointerLocation + 1];
+            pointnow += 1;
+        }
+        else if (code[i] == 'i') {
+            nums[pointnow] = array[pointerLocation - 1];
+            pointnow += 1;
+        }
+        else if (code[i] == 't') {
+            nums[pointnow] = array[pointerLocation];
+            pointnow += 1;
+        }
+        else if (code[i] == '+') {
+            actions.push_back(1);
+            actyes = true;
+        }
+        else if (code[i] == '-') {
+            actions.push_back(0);
+            actyes = true;
+        }
+        else if (code[i] == '*') {
+            actions.push_back(2);
+            actyes = true;
+        }
+        else if (code[i] == '%')
+        {
+            actions.push_back(3);
+            actyes = true;
+        }
+    }
+    if (actyes == true) {
+        if (actions[0] == 0) {
+            if (nums[0] > nums[1]) {
+                array[pointerLocation] = nums[0] - nums[1];
+            }
+            else std::cout << 0;
+        }
+        else if (actions[0] == 1) {
+            array[pointerLocation] = nums[0] + nums[1];
+        }
+        else if (actions[0] == 2) {
+            array[pointerLocation] = nums[0] * nums[1];
+        }
+        else if (actions[0] == 3) {
+            array[pointerLocation] = nums[0] / nums[1];
+        }
+    }
+    else {
+        std::cout << "ERROR! Action not found!";
+        exit(0);
+    }
+}
+
+void ifFunc(std::string code) {
     int nums[2];
     int action = 0;
     int pointnow = 0;
@@ -149,15 +236,15 @@ void ifFunc(std::string code, int pl) {
     std::string execute = "";
     for (int i = 0; i < code.length(); i++) {
         if (code[i] == 'i') {
-            nums[pointnow] = array[pl - 1];
+            nums[pointnow] = array[pointerLocation - 1];
             pointnow += 1;
         }
         else if (code[i] == 'k') {
-            nums[pointnow] = array[pl + 1];
+            nums[pointnow] = array[pointerLocation + 1];
             pointnow += 1;
         }
         else if (code[i] == 't') {
-            nums[pointnow] = array[pl];
+            nums[pointnow] = array[pointerLocation];
             pointnow += 1;
         }
         else if (code[i] == '>') {
@@ -168,6 +255,10 @@ void ifFunc(std::string code, int pl) {
         }
         else if (code[i] == '=') {
             action = 0;
+        }
+        else if (code[i] == '~')
+        {
+            action = 3;
         }
         else if (code[i] == '!') {
             execute = code.substr(i + 1, code.length());
@@ -207,6 +298,13 @@ void ifFunc(std::string code, int pl) {
                 interpret(execute);
             }
         }
+        else if (action == 3)
+        {
+            if (nums[0] != nums[1])
+            {
+                interpret(execute);
+            }
+        }
     }
     else {
         std::cout << "Error! If without body!" << std::endl;
@@ -220,7 +318,7 @@ int main()
     std::cin >> mode;
     if (mode == 1)
     {
-        std::cout << "Welcome to Better Cookie961 language Compiler v2.1" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Compiler v2.5" << std::endl;
         std::cout << " " << std::endl;
         std::string foil;
         std::cout << "File Name: ";
@@ -238,15 +336,19 @@ int main()
     }
     else
     {
-        std::cout << "Welcome to Better Cookie961 language Shell v2.1" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v2.5" << std::endl;
         std::cout << " " << std::endl;
-        while (true)
+        int nig = 0;
+        while (nig != 2)
         {
             std::string code;
             std::cout << "Code: ";
             std::getline(std::cin, code);
             interpret(code);
+            nig += 1;
         }
+
+        system("pause");
     }
 
     return 0;
