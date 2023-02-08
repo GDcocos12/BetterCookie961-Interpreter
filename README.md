@@ -21,8 +21,20 @@ BetterCookie961 has 8 basic instructions:
 * `1` - jump to the **matching** `6` instruction if the current cookie value is **not** zero
 * `(` - IF construction starts
 * `)` - IF construction ends
+* `N` - Return to the initial cookie
+* `n` - print current cookie value
+* `>` - Go to next line(in output)
+* `R` - Write a random value in the range 0-100 to a cookie
+* `{` - Beginning of an arithmetic expression
+* `}` - End of arithmetic expression
 
 # How to write IF constructions
+
+IF construction operators:
+* `>` - bigger
+* `<` - less
+* `=` - equal
+* `~` - not equal
 
 1) IF always starts with an expression. (k > i ! cca)
 
@@ -33,6 +45,7 @@ BetterCookie961 has 8 basic instructions:
 * `k` - right cookie value
 * `t` - current cookie value
 Example: (k > i ! cca) = {if (k > i): do cca}
+
 
 ATTENTION! Before calling the IF, "create" all the cookies you need (move to them)!
 Example: cc(k > i ! cca) - ERROR, because right cookie does not exist. kkki(k > i ! cca) - SUCCESS, right and left cookies exist.
@@ -47,3 +60,33 @@ Examples:
 * `cckccckcccci(k > (i < k ! cca))` - ERROR, no body.
 
 **IF constructs ALWAYS have !, otherwise you will get an error.**
+
+# How to write arithmetic expressions
+
+Arithmetic expressions have 4 operators:
+* `+` - addition
+* `-` - subtraction
+* `*` - multiplication
+* `%` - division
+
+Numeric values are passed through:
+* `k` - right cookie value
+* `t` - current cookie value
+* `i` - left cookie value
+
+**After executing an arithmetic expression, the result is written to the current cookie**
+
+Examples:
+
+`{t + k}` - current cookie value + right cookie value
+`{t - i}` - current cookie value - left cookie value
+
+**ATTENTION! The arithmetic expression only uses 2 values and 1 operator!**
+
+`{t + k - i}` = `{t + k}`
+`{i * k - t + k}` = `{i * k}`
+
+Program Examples:
+
+`ekei{t + k}n` - Calculates the sum of two numbers
+`ekekei{t + k}{t + i}n` - Calculates the sum of three numbers
