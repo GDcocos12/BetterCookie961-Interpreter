@@ -27,6 +27,8 @@ BetterCookie961 has 8 basic instructions:
 * `R` - Write a random value in the range 0-100 to a cookie
 * `{` - Beginning of an arithmetic expression
 * `}` - End of arithmetic expression
+* `r` - Run file from user input
+* `B[filename]` - Run file
 
 # How to write IF constructions
 
