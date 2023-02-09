@@ -29,6 +29,7 @@ BetterCookie961 has 8 basic instructions:
 * `}` - End of arithmetic expression
 * `r` - Run file from user input
 * `B[filename]` - Run file
+* `-` - Stop executing program
 
 # How to write IF constructions
 
