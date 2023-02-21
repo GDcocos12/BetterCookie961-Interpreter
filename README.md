@@ -3,8 +3,6 @@ BetterCookie961 Interpreter written in c++
 
 # BetterCookie961 Instructions
 
-BetterCookie961 has 8 basic instructions:
-
 * `k` - move the pointer right
 * `i` - move the pointer left
 * `K` - move the pointer right and copy the value of the left cookie
