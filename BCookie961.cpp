@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <ctime>
 #include <time.h>
+#include <windows.h>
 
 std::vector<int> array{0};
 int pointerLocation = 0;
@@ -48,7 +49,7 @@ void interpret(std::string code) {
         else if (code[i] == 'I') {
             if (pointerLocation > 0) {
                 pointerLocation -= 1;
-                array[pointerLocation] += array[pointerLocation + 1];
+                array[pointerLocation] = array[pointerLocation + 1];
             }
         }
         else if (code[i] == 'k') {
@@ -62,7 +63,7 @@ void interpret(std::string code) {
             if (array.size() <= pointerLocation) {
                 array.push_back(0);
             }
-            array[pointerLocation] += array[pointerLocation - 1];
+            array[pointerLocation] = array[pointerLocation - 1];
         }
         else if (code[i] == 'r') {
             std::string flnm;
@@ -149,6 +150,18 @@ void interpret(std::string code) {
             }
             else {
                 std::cout << "Error! File not found!" << std::endl;
+            }
+        }
+        else if (code[i] == 'S') {
+            if (code[i + 1] == '[') {
+                int nigge = i + 2;
+                std::string times = "";
+                while (code[nigge] != ']') {
+                    times += code[nigge];
+                    nigge++;
+                    i++;
+                }
+                Sleep(stoi(times));
             }
         }
         else if (code[i] == '9') {
@@ -352,7 +365,7 @@ int main()
     std::cin >> mode;
     if (mode == 1)
     {
-        std::cout << "Welcome to Better Cookie961 language Compiler v2.6" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Compiler v2.7" << std::endl;
         std::cout << " " << std::endl;
         std::string foil;
         std::cout << "File Name: ";
@@ -370,7 +383,7 @@ int main()
     }
     else
     {
-        std::cout << "Welcome to Better Cookie961 language Shell v2.6" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v2.7" << std::endl;
         std::cout << " " << std::endl;
         int nig = 0;
         while (nig != 1)
