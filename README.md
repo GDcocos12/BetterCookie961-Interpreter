@@ -27,6 +27,7 @@ BetterCookie961 Interpreter written in c++
 * `}` - End of arithmetic expression
 * `r` - Run file from user input
 * `B[filename]` - Run file
+* `S[milliseconds]` - Sleep function
 * `-` - Stop executing program
 
 # How to write IF constructions
