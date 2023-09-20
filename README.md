@@ -30,6 +30,10 @@ BetterCookie961 Interpreter written in c++
 * `S[milliseconds]` - Sleep function
 * `M[WhereToMove(int)]` - Move current cookie value to another cookie
 * `-` - Stop executing program
+# Some Examples
+
+`M[3]` - Moves the value of this cookie forward 3 steps right.
+`M[-1]` - Moves the value of this cookie forward 1 step left.
 
 # How to write IF constructions
 
