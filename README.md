@@ -28,6 +28,7 @@ BetterCookie961 Interpreter written in c++
 * `r` - Run file from user input
 * `B[filename]` - Run file
 * `S[milliseconds]` - Sleep function
+* `M[WhereToMove(int)]` - Move current cookie value to another cookie
 * `-` - Stop executing program
 
 # How to write IF constructions
