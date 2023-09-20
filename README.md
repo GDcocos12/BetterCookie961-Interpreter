@@ -32,8 +32,8 @@ BetterCookie961 Interpreter written in c++
 * `-` - Stop executing program
 # Some Examples
 
-* `M[3]` - Moves the value of this cookie forward 3 steps right.
-* `M[-1]` - Moves the value of this cookie forward 1 step left.
+* `M[3]` - Moves the value of this cookie 3 steps to the right.
+* `M[-1]` - Moves the value of this cookie 1 step to the left.
 
 # How to write IF constructions
 
