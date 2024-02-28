@@ -7,7 +7,7 @@
 #include <time.h>
 #include <windows.h>
 
-std::vector<int> array{0};
+std::vector<int> array{ 0 };
 int pointerLocation = 0;
 
 bool endsWith(std::string const& str, std::string const& suffix) {
@@ -166,10 +166,20 @@ void interpret(std::string code) {
             }
         }
         else if (code[i] == '9') {
-            std::cout << char(array[pointerLocation]);
+            if (array[pointerLocation] >= 0) {
+                std::cout << char(array[pointerLocation]);
+            }
+            else {
+                std::cout << char(0);
+            }
         }
         else if (code[i] == 'a') {
-            std::cout << array[pointerLocation] << " " << char(array[pointerLocation]) << std::endl;
+            if (array[pointerLocation] >= 0) {
+                std::cout << array[pointerLocation] << " " << char(array[pointerLocation]) << std::endl;
+            }
+            else {
+                std::cout << array[pointerLocation] << " " << char(0) << std::endl;
+            }
         }
         else if (code[i] == 'e') {
             std::string x;
@@ -284,10 +294,7 @@ void arythm(std::string code) {
     }
     if (actyes == true) {
         if (actions[0] == 0) {
-            if (nums[0] > nums[1]) {
-                array[pointerLocation] = nums[0] - nums[1];
-            }
-            else std::cout << 0;
+            array[pointerLocation] = nums[0] - nums[1];
         }
         else if (actions[0] == 1) {
             array[pointerLocation] = nums[0] + nums[1];
@@ -413,7 +420,7 @@ int main()
     }
     else
     {
-        std::cout << "Welcome to Better Cookie961 language Shell v2.8" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v2.9" << std::endl;
         std::cout << " " << std::endl;
         int nig = 0;
         while (nig != 1)
