@@ -252,6 +252,33 @@ void interpret(std::string code) {
                 return;
             }
         }
+        else if (code[i] == 'X') {
+            if (code[i + 1] == '[') {
+                int m_start = i + 2;
+                int m_end = m_start;
+                while (code[m_end] != ']') {
+                    m_end++;
+                }
+                std::string m_str = code.substr(m_start, m_end - m_start);
+                int m = std::stoi(m_str);
+                if (pointerLocation + m < 0) {
+                    std::cout << "Error! Pointer Location is negative." << std::endl;
+                    return;
+                }
+                else if (pointerLocation + m >= array.size()) {
+                    while (array.size() <= pointerLocation + m) {
+                        array.push_back(0);
+                    }
+                }
+                array[pointerLocation + m] = array[pointerLocation];
+                i = m_end;
+                pointerLocation += m;
+            }
+            else {
+                std::cout << "Error! Invalid syntax for M command." << std::endl;
+                return;
+            }
+        }
         i += 1;
     }
     std::cout << " " << std::endl;
@@ -423,7 +450,7 @@ int main()
     }
     else
     {
-        std::cout << "Welcome to Better Cookie961 language Shell v3.0" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v3.1" << std::endl;
         std::cout << " " << std::endl;
         int nig = 0;
         while (nig != 1)
