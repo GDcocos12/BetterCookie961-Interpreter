@@ -432,7 +432,7 @@ int main()
     std::cin >> mode;
     if (mode == 1)
     {
-        std::cout << "Welcome to Better Cookie961 language Compiler v2.8" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Compiler v3.1" << std::endl;
         std::cout << " " << std::endl;
         std::string foil;
         std::cout << "File Name: ";
