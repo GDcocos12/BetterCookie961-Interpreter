@@ -85,6 +85,9 @@ void interpret(std::string code) {
         else if (code[i] == 'n') {
             std::cout << array[pointerLocation];
         }
+        else if (code[i] == 'g') {
+            std::cout << pointerLocation;
+        }
         else if (code[i] == 'R') {
             array[pointerLocation] = rand() % 100;
         }
@@ -420,7 +423,7 @@ int main()
     }
     else
     {
-        std::cout << "Welcome to Better Cookie961 language Shell v2.9" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v3.0" << std::endl;
         std::cout << " " << std::endl;
         int nig = 0;
         while (nig != 1)
