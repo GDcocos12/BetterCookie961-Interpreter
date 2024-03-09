@@ -3,9 +3,20 @@
 #include <vector>
 #include <fstream>
 #include <stdlib.h>
+#include <cstdlib>
 #include <ctime>
 #include <time.h>
 #include <windows.h>
+
+/*
+
+
+UPDATE LOG:
+
+3.2 - Fixed Random Number Generator
+
+
+*/
 
 std::vector<int> array{ 0 };
 int pointerLocation = 0;
@@ -37,7 +48,6 @@ void ifFunc(std::string code);
 void arythm(std::string code);
 
 void interpret(std::string code) {
-    srand(time(NULL));
     int i = 0;
     int c = 0;
     while (i < code.length()) {
@@ -89,7 +99,7 @@ void interpret(std::string code) {
             std::cout << pointerLocation;
         }
         else if (code[i] == 'R') {
-            array[pointerLocation] = rand() % 100;
+            array[pointerLocation] = rand() % 101;
         }
         else if (code[i] == 'c') {
             array[pointerLocation] += 1;
@@ -427,12 +437,13 @@ void ifFunc(std::string code) {
 
 int main()
 {
+    srand(time(NULL));
     int mode = 0;
     std::cout << "Mode(1 - compiler, 2 - interpreter): ";
     std::cin >> mode;
     if (mode == 1)
     {
-        std::cout << "Welcome to Better Cookie961 language Compiler v3.1" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Compiler v3.2" << std::endl;
         std::cout << " " << std::endl;
         std::string foil;
         std::cout << "File Name: ";
@@ -450,7 +461,7 @@ int main()
     }
     else
     {
-        std::cout << "Welcome to Better Cookie961 language Shell v3.1" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v3.2" << std::endl;
         std::cout << " " << std::endl;
         int nig = 0;
         while (nig != 1)
