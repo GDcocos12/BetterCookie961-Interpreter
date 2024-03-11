@@ -32,6 +32,7 @@ BetterCookie961 Interpreter written in c++
 * `-` - Stop executing program
 * `g` - output in which cookie we are located
 * `X[Offset(int)]` - Copy current cookie value to another cookie
+* `/* {your comment here} */` - Comment
 # Some Examples
 
 * `M[3]` - Moves the value of this cookie 3 steps to the right.
