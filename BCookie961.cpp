@@ -15,6 +15,7 @@ UPDATE LOG:
 
 3.2 - Fixed Random Number Generator
 
+3.3 - Comments added!
 
 */
 
@@ -289,6 +290,16 @@ void interpret(std::string code) {
                 return;
             }
         }
+        else if (code[i] == '/' && (i + 1 < code.length()) && code[i + 1] == '*') {
+            i += 2;
+            while (i < code.length() - 1 && !(code[i] == '*' && code[i + 1] == '/')) {
+                i++;
+            }
+            i--;
+            if (i < code.length() - 1) {
+                i += 2;
+            }
+        }
         i += 1;
     }
     std::cout << " " << std::endl;
@@ -443,7 +454,7 @@ int main()
     std::cin >> mode;
     if (mode == 1)
     {
-        std::cout << "Welcome to Better Cookie961 language Compiler v3.2" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Compiler v3.3" << std::endl;
         std::cout << " " << std::endl;
         std::string foil;
         std::cout << "File Name: ";
@@ -461,7 +472,7 @@ int main()
     }
     else
     {
-        std::cout << "Welcome to Better Cookie961 language Shell v3.2" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v3.3" << std::endl;
         std::cout << " " << std::endl;
         int nig = 0;
         while (nig != 1)
