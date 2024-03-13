@@ -17,6 +17,8 @@ UPDATE LOG:
 
 3.3 - Comments added!
 
+3.4 - Fixed 6-1 cycles and if constructions!
+
 
 */
 
@@ -133,6 +135,25 @@ void interpret(std::string code) {
             array[pointerLocation] = 0;
         }
         else if (code[i] == '(') {
+            int open_braces = 1;
+            int ifend = i + 1;
+            std::string to_execute = "";
+            while (open_braces != 0) {
+                if (code[ifend] == '(') {
+                    open_braces++;
+                }
+                else if (code[ifend] == ')') {
+                    open_braces--;
+                }
+                if (open_braces != 0) {
+                    to_execute += code[ifend];
+                }
+                ifend++;
+            }
+            i = ifend - 1;
+            ifFunc(to_execute);
+        }
+        /*else if (code[i] == '(') {
             int ifend = i + 1;
             std::string to_execute = "";
             while (code[ifend] != ')') {
@@ -141,7 +162,7 @@ void interpret(std::string code) {
                 i++;
             }
             ifFunc(to_execute);
-        }
+        }*/
         else if (code[i] == '{') {
             int arend = i + 1;
             std::string to_count = "";
@@ -219,10 +240,64 @@ void interpret(std::string code) {
                     else if (code[i] == '1') {
                         open_braces -= 1;
                     }
+                    else if (code[i] == '[') {
+                        int open_brackets1 = 1;
+                        while (open_brackets1 > 0) {
+                            i += 1;
+                            if (code[i] == '[') {
+                                open_brackets1 += 1;
+                            }
+                            else if (code[i] == ']') {
+                                open_brackets1 -= 1;
+                            }
+                        }
+                        i += 1;
+                    }
                 }
+                i += 1;
             }
         }
+        /*else if (code[i] == '6') {
+            if (array[pointerLocation] == 0) {
+                int open_braces = 1;
+                while (open_braces > 0) {
+                    i += 1;
+                    if (code[i] == '6') {
+                        open_braces += 1;
+                    }
+                    else if (code[i] == '1') {
+                        open_braces -= 1;
+                    }
+                }
+            }
+        }*/
         else if (code[i] == '1') {
+            int open_braces = 1;
+            while (open_braces > 0) {
+                i -= 1;
+                if (code[i] == '6') {
+                    open_braces -= 1;
+                }
+                else if (code[i] == '1') {
+                    open_braces += 1;
+                }
+                else if (code[i] == ']') {
+                    int open_brackets1 = 1;
+                    while (open_brackets1 > 0) {
+                        i -= 1;
+                        if (code[i] == '[') {
+                            open_brackets1 -= 1;
+                        }
+                        else if (code[i] == ']') {
+                            open_brackets1 += 1;
+                        }
+                    }
+                    i -= 1;
+                }
+            }
+            i -= 1;
+        }
+        /*else if (code[i] == '1') {
             int open_braces = 1;
             while (open_braces > 0) {
                 i -= 1;
@@ -234,7 +309,7 @@ void interpret(std::string code) {
                 }
             }
             i -= 1;
-        }
+        }*/
         else if (code[i] == 'M') {
             if (code[i + 1] == '[') {
                 int m_start = i + 2;
@@ -455,7 +530,7 @@ int main()
     std::cin >> mode;
     if (mode == 1)
     {
-        std::cout << "Welcome to Better Cookie961 language Compiler v3.3" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Compiler v3.4" << std::endl;
         std::cout << " " << std::endl;
         std::string foil;
         std::cout << "File Name: ";
@@ -473,7 +548,7 @@ int main()
     }
     else
     {
-        std::cout << "Welcome to Better Cookie961 language Shell v3.3" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v3.4" << std::endl;
         std::cout << " " << std::endl;
         int nig = 0;
         while (nig != 1)
