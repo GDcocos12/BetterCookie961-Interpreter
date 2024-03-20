@@ -19,6 +19,8 @@ UPDATE LOG:
 
 3.4 - Fixed 6-1 cycles and if constructions!
 
+3.5 - Added P and J commands!
+
 
 */
 
