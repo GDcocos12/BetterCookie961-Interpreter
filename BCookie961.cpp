@@ -96,6 +96,20 @@ void interpret(std::string code) {
         else if (code[i] == 'N') {
             pointerLocation = 0;
         }
+        else if (code[i] == 'P') {
+            int tmp = pointerLocation;
+            pointerLocation = array[pointerLocation];
+            if (pointerLocation >= array.size()) {
+                array.resize(pointerLocation + 1, 0);
+            }
+            array[pointerLocation] = tmp;
+        }
+        else if (code[i] == 'J') {
+            pointerLocation = array[pointerLocation];
+            if (pointerLocation >= array.size()) {
+                array.resize(pointerLocation + 1, 0);
+            }
+        }
         else if (code[i] == 'n') {
             std::cout << array[pointerLocation];
         }
@@ -135,17 +149,17 @@ void interpret(std::string code) {
             array[pointerLocation] = 0;
         }
         else if (code[i] == '(') {
-            int open_braces = 1;
+            int open_braces777 = 1;
             int ifend = i + 1;
             std::string to_execute = "";
-            while (open_braces != 0) {
+            while (open_braces777 != 0) {
                 if (code[ifend] == '(') {
-                    open_braces++;
+                    open_braces777++;
                 }
                 else if (code[ifend] == ')') {
-                    open_braces--;
+                    open_braces777--;
                 }
-                if (open_braces != 0) {
+                if (open_braces777 != 0) {
                     to_execute += code[ifend];
                 }
                 ifend++;
@@ -231,14 +245,14 @@ void interpret(std::string code) {
         }
         else if (code[i] == '6') {
             if (array[pointerLocation] == 0) {
-                int open_braces = 1;
-                while (open_braces > 0) {
+                int open_braces6 = 1;
+                while (open_braces6 > 0) {
                     i += 1;
                     if (code[i] == '6') {
-                        open_braces += 1;
+                        open_braces6 += 1;
                     }
                     else if (code[i] == '1') {
-                        open_braces -= 1;
+                        open_braces6 -= 1;
                     }
                     else if (code[i] == '[') {
                         int open_brackets1 = 1;
@@ -530,7 +544,7 @@ int main()
     std::cin >> mode;
     if (mode == 1)
     {
-        std::cout << "Welcome to Better Cookie961 language Compiler v3.4" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Compiler v3.5" << std::endl;
         std::cout << " " << std::endl;
         std::string foil;
         std::cout << "File Name: ";
@@ -548,7 +562,7 @@ int main()
     }
     else
     {
-        std::cout << "Welcome to Better Cookie961 language Shell v3.4" << std::endl;
+        std::cout << "Welcome to Better Cookie961 language Shell v3.5" << std::endl;
         std::cout << " " << std::endl;
         int nig = 0;
         while (nig != 1)
