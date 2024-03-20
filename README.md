@@ -33,6 +33,8 @@ BetterCookie961 Interpreter written in c++
 * `g` - output in which cookie we are located
 * `X[Offset(int)]` - Copy current cookie value to another cookie
 * `/* {your comment here} */` - Comment
+* `P` - Move to the cookie whose number corresponds to the value of the current cookie and transfer the number of the current cookie to the one to which we move (for example, in order to go back).
+* `J` - Move to the cookie whose number corresponds to the value of the current cookie. (without transferring the number of the current cookie to the one to which we move).
 # Some Examples
 
 * `M[3]` - Moves the value of this cookie 3 steps to the right.
