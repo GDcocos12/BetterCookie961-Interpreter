@@ -35,10 +35,16 @@ BetterCookie961 Interpreter written in c++
 * `/* {your comment here} */` - Comment
 * `P` - Move to the cookie whose number corresponds to the value of the current cookie and transfer the number of the current cookie to the one to which we move (for example, in order to go back).
 * `J` - Move to the cookie whose number corresponds to the value of the current cookie. (without transferring the number of the current cookie to the one to which we move).
+* `_` - Exit from interpretation iteration.
+* `G` - Write current cookie's address into current cookie.
+* `x[+/-0/1]` - Copy the value of the current cookie to the address that lies in the left or right cookie (depending on -(left) or +(right)), and also moves the cursor to the address (if 1) and does not move (if 0).
+* `m[+/-0/1]` - Move the value of the current cookie to the address that lies in the left or right cookie (depending on -(left) or +(right)), and also moves the cursor to the address (if 1) and does not move (if 0).
 # Some Examples
 
 * `M[3]` - Moves the value of this cookie 3 steps to the right.
 * `M[-1]` - Moves the value of this cookie 1 step to the left.
+* `x[-0]` - Copy the value of the current cookie to the address from the left cookie without moving the cursor.
+* `m[+1]` - Move the value of the current cookie to the address from the right cookie and move the cursor to the address from the right cookie.
 
 # How to write IF constructions
 
