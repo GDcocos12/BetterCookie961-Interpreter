@@ -576,6 +576,8 @@ int main()
         std::getline(std::cin, code);
         interpret(code);
         std::cout << std::endl;
+
+        system("pause");
     }
 
     return 0;
