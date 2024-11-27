@@ -2,13 +2,19 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <stdlib.h>
 #include <cstdlib>
 #include <ctime>
-#include <thread>
-#include <chrono>
+#include <time.h>
+#include <windows.h>
 #include <regex>
+#include <chrono>
+#include <thread>
+
 
 /*
+
+
 UPDATE LOG:
 
 3.2 - Fixed Random Number Generator
@@ -22,35 +28,18 @@ UPDATE LOG:
 3.6 - Added _(break), x/m[+/-0/1], and G
 
 3.7 - Made cross-platform and fixed bugs (comments are now working just fine!)
+
 */
 
 std::vector<int> array{ 0 };
 int pointerLocation = 0;
 
-bool endsWith(const std::string& str, const std::string& suffix)
-{
-    return str.size() >= suffix.size() &&
-        str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
-}
-
-std::string readFile(const std::string& fileName)
-{
-    std::ifstream f(fileName);
-    if (!f.is_open())
-    {
-        std::cerr << "Error! File not found!" << std::endl;
-        exit(EXIT_FAILURE);
+bool endsWith(std::string const& str, std::string const& suffix) {
+    if (str.length() < suffix.length()) {
+        return false;
     }
-    f.seekg(0, std::ios::end);
-    size_t size = f.tellg();
-    std::string s(size, ' ');
-    f.seekg(0);
-    f.read(&s[0], size);
-    return s;
+    return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
 }
-
-void ifFunc(const std::string& code);
-void arythm(const std::string& code);
 
 static std::string preprocessCode(const std::string& code) {
     std::string result = code;
@@ -61,35 +50,55 @@ static std::string preprocessCode(const std::string& code) {
     return result;
 }
 
-void interpret(const std::string& rawCode)
-{
-    const std::string code = preprocessCode(rawCode);
-    size_t i = 0;
-    while (i < code.length())
+std::string readFile(const std::string& fileName) {
+    std::ifstream f(fileName);
+    if (!f.is_open())
     {
-        switch (code[i])
-        {
-        case 'i':
-            if (pointerLocation > 0)
+        std::cout << "Error! File not found!" << std::endl;
+        exit(0);
+    }
+    f.seekg(0, std::ios::end);
+    size_t size = f.tellg();
+    std::string s;
+    s.resize(size);
+    f.seekg(0);
+    f.read(&s[0], size);
+    return s;
+}
+
+void ifFunc(std::string code);
+void arythm(std::string code);
+
+void interpret(std::string rawCode) {
+    const std::string code = preprocessCode(rawCode);
+    int i = 0;
+    int c = 0;
+    while (i < code.length()) {
+        if (code[i] == 'i') {
+            if (pointerLocation > 0) {
                 pointerLocation -= 1;
-            break;
-        case 'I':
-            if (pointerLocation > 0)
-            {
+            }
+        }
+        else if (code[i] == 'I') {
+            if (pointerLocation > 0) {
                 pointerLocation -= 1;
                 array[pointerLocation] = array[pointerLocation + 1];
             }
-            break;
-        case 'k':
-        case 'K':
+        }
+        else if (code[i] == 'k') {
             pointerLocation += 1;
-            if (array.size() <= pointerLocation)
+            if (array.size() <= pointerLocation) {
                 array.push_back(0);
-            if (code[i] == 'K')
-                array[pointerLocation] = array[pointerLocation - 1];
-            break;
-        case 'r':
-        {
+            }
+        }
+        else if (code[i] == 'K') {
+            pointerLocation += 1;
+            if (array.size() <= pointerLocation) {
+                array.push_back(0);
+            }
+            array[pointerLocation] = array[pointerLocation - 1];
+        }
+        else if (code[i] == 'r') {
             std::string flnm;
             std::cout << "File Name: ";
             std::cin >> flnm;
@@ -99,109 +108,121 @@ void interpret(const std::string& rawCode)
             }
             else
             {
-                std::cerr << "Error! Unknown extension." << std::endl;
-                exit(EXIT_FAILURE);
+                std::cout << "Error! Unknown extension.";
+                exit(0);
             }
-            break;
         }
-        case 'N':
+        else if (code[i] == 'N') {
             pointerLocation = 0;
-            break;
-        case 'P':
-            if (pointerLocation >= array.size())
-            {
-                array.resize(pointerLocation + 1, 0);
-            }
-            std::swap(pointerLocation, array[pointerLocation]);
-            break;
-        case 'J':
-            if (pointerLocation >= array.size())
-            {
-                array.resize(pointerLocation + 1, 0);
-            }
+        }
+        else if (code[i] == 'P') {
+            int tmp = pointerLocation;
             pointerLocation = array[pointerLocation];
-            break;
-        case 'n':
+            if (pointerLocation >= array.size()) {
+                array.resize(pointerLocation + 1, 0);
+            }
+            array[pointerLocation] = tmp;
+        }
+        else if (code[i] == 'J') {
+            pointerLocation = array[pointerLocation];
+            if (pointerLocation >= array.size()) {
+                array.resize(pointerLocation + 1, 0);
+            }
+        }
+        else if (code[i] == 'n') {
             std::cout << array[pointerLocation];
-            break;
-        case 'g':
+        }
+        else if (code[i] == 'g') {
             std::cout << pointerLocation;
-            break;
-        case 'R':
+        }
+        else if (code[i] == 'R') {
             array[pointerLocation] = rand() % 101;
-            break;
-        case 'c':
+        }
+        else if (code[i] == 'c') {
             array[pointerLocation] += 1;
-            break;
-        case 'C':
+        }
+        else if (code[i] == 'C') {
             array[pointerLocation] += 10;
-            break;
-        case 'o':
-            if (array[pointerLocation] > 0)
+        }
+        else if (code[i] == 'o') {
+            if (array[pointerLocation] > 0) {
                 array[pointerLocation] -= 1;
-            break;
-        case 'O':
-            if (array[pointerLocation] > 10)
-                array[pointerLocation] -= 10;
-            break;
-        case '-':
-            std::cout << "Paused. Press Enter to exit." << std::endl;
-            std::cin.get();
-            exit(EXIT_SUCCESS);
-            break;
-        case '>':
-            std::cout << std::endl;
-            break;
-        case 'L':
-            array[pointerLocation] = 0;
-            break;
-        case '(':
+            }
+        }
+        else if (code[i] == '-')
         {
-            int open_braces = 1;
-            size_t ifend = i + 1;
+            system("pause");
+            exit(0);
+        }
+        else if (code[i] == '>')
+        {
+            std::cout << std::endl;
+        }
+        else if (code[i] == 'O') {
+            if (array[pointerLocation] > 10) {
+                array[pointerLocation] -= 10;
+            }
+        }
+        else if (code[i] == 'L')
+        {
+            array[pointerLocation] = 0;
+        }
+        else if (code[i] == '(') {
+            int open_braces777 = 1;
+            int ifend = i + 1;
             std::string to_execute = "";
-            while (open_braces > 0)
-            {
-                if (code[ifend] == '(')
-                    open_braces++;
-                else if (code[ifend] == ')')
-                    open_braces--;
-                if (open_braces > 0)
+            while (open_braces777 != 0) {
+                if (code[ifend] == '(') {
+                    open_braces777++;
+                }
+                else if (code[ifend] == ')') {
+                    open_braces777--;
+                }
+                if (open_braces777 != 0) {
                     to_execute += code[ifend];
+                }
                 ifend++;
             }
             i = ifend - 1;
             ifFunc(to_execute);
-            break;
         }
-        case '{':
-        {
-            size_t arend = i + 1;
+        /*else if (code[i] == '(') {
+            int ifend = i + 1;
+            std::string to_execute = "";
+            while (code[ifend] != ')') {
+                to_execute += code[ifend];
+                ifend++;
+                i++;
+            }
+            ifFunc(to_execute);
+        }*/
+        else if (code[i] == '{') {
+            int arend = i + 1;
             std::string to_count = "";
-            while (code[arend] != '}')
-                to_count += code[arend++];
-            i = arend;
+            while (code[arend] != '}') {
+                to_count += code[arend];
+                arend++;
+                i++;
+            }
             arythm(to_count);
-            break;
         }
-        case 'B':
-        {
-            if (code[++i] == '[')
-            {
-                size_t tmp1 = i + 1;
+        else if (code[i] == 'B') {
+            if (code[++i] == '[') {
+                int nigg = i + 1;
                 std::string filename = "";
-                while (code[tmp1] != ']')
-                    filename += code[tmp1++];
+                while (code[nigg] != ']') {
+                    filename += code[nigg];
+                    nigg++;
+                    i++;
+                }
                 interpret(readFile(filename));
             }
-            else
-            {
-                std::cerr << "Error! File not found!" << std::endl;
+            else {
+                i--;
+                std::cout << "Error! File not found!" << std::endl;
             }
-            break;
         }
-        case 'S':
-        {
+        else if (code[i] == 'S') {
             if (code[i + 1] == '[')
             {
                 size_t tmp2 = i + 2;
@@ -211,333 +232,391 @@ void interpret(const std::string& rawCode)
                 std::this_thread::sleep_for(std::chrono::milliseconds(std::stoi(times)));
                 i = tmp2;
             }
-            break;
         }
-        case '9':
-            std::cout << static_cast<char>(array[pointerLocation] >= 0 ? array[pointerLocation] : 0);
-            break;
-        case 'a':
-            std::cout << array[pointerLocation] << " " << static_cast<char>(array[pointerLocation] >= 0 ? array[pointerLocation] : 0) << std::endl;
-            break;
-        case 'e':
-        {
+        else if (code[i] == '9') {
+            if (array[pointerLocation] >= 0) {
+                std::cout << char(array[pointerLocation]);
+            }
+            else {
+                std::cout << char(0);
+            }
+        }
+        else if (code[i] == 'a') {
+            if (array[pointerLocation] >= 0) {
+                std::cout << array[pointerLocation] << " " << char(array[pointerLocation]) << std::endl;
+            }
+            else {
+                std::cout << array[pointerLocation] << " " << char(0) << std::endl;
+            }
+        }
+        else if (code[i] == 'e') {
             std::string x;
             std::cin >> x;
-            try
-            {
-                array[pointerLocation] = std::stoi(x);
+            int y;
+            try {
+                y = std::stoi(x);
             }
-            catch (const std::invalid_argument&)
-            {
-                array[pointerLocation] = static_cast<int>(x[0]);
+            catch (std::invalid_argument) {
+                y = int(x[0]);
             }
-            break;
+            array[pointerLocation] = y;
         }
-        case '6':
-        {
-            if (array[pointerLocation] == 0)
-            {
+        else if (code[i] == '6') {
+            if (array[pointerLocation] == 0) {
                 int open_braces6 = 1;
-                while (open_braces6 > 0)
-                {
+                while (open_braces6 > 0) {
                     i += 1;
-                    if (code[i] == '6')
-                        open_braces6++;
-                    else if (code[i] == '1')
-                        open_braces6--;
-                    else if (code[i] == '[')
-                    {
+                    if (code[i] == '6') {
+                        open_braces6 += 1;
+                    }
+                    else if (code[i] == '1') {
+                        open_braces6 -= 1;
+                    }
+                    else if (code[i] == '[') {
                         int open_brackets1 = 1;
-                        while (open_brackets1 > 0)
-                        {
+                        while (open_brackets1 > 0) {
                             i += 1;
-                            if (code[i] == '[')
-                                open_brackets1++;
-                            else if (code[i] == ']')
-                                open_brackets1--;
+                            if (code[i] == '[') {
+                                open_brackets1 += 1;
+                            }
+                            else if (code[i] == ']') {
+                                open_brackets1 -= 1;
+                            }
                         }
+                        i += 1;
+                    }
+                }
+                i += 1;
+            }
+        }
+        /*else if (code[i] == '6') {
+            if (array[pointerLocation] == 0) {
+                int open_braces = 1;
+                while (open_braces > 0) {
+                    i += 1;
+                    if (code[i] == '6') {
+                        open_braces += 1;
+                    }
+                    else if (code[i] == '1') {
+                        open_braces -= 1;
                     }
                 }
             }
-            break;
-        }
-        case '1':
-        {
+        }*/
+        else if (code[i] == '1') {
             int open_braces = 1;
-            while (open_braces > 0)
-            {
+            while (open_braces > 0) {
                 i -= 1;
-                if (code[i] == '6')
-                    open_braces--;
-                else if (code[i] == '1')
-                    open_braces++;
-                else if (code[i] == ']')
-                {
+                if (code[i] == '6') {
+                    open_braces -= 1;
+                }
+                else if (code[i] == '1') {
+                    open_braces += 1;
+                }
+                else if (code[i] == ']') {
                     int open_brackets1 = 1;
-                    while (open_brackets1 > 0)
-                    {
+                    while (open_brackets1 > 0) {
                         i -= 1;
-                        if (code[i] == '[')
-                            open_brackets1--;
-                        else if (code[i] == ']')
-                            open_brackets1++;
+                        if (code[i] == '[') {
+                            open_brackets1 -= 1;
+                        }
+                        else if (code[i] == ']') {
+                            open_brackets1 += 1;
+                        }
                     }
+                    i -= 1;
                 }
             }
             i -= 1;
-            break;
         }
-        case 'M':
-        case 'X':
-        {
-            if (code[i + 1] == '[')
-            {
-                size_t m_start = i + 2;
-                size_t m_end = m_start;
-                while (code[m_end] != ']')
+        /*else if (code[i] == '1') {
+            int open_braces = 1;
+            while (open_braces > 0) {
+                i -= 1;
+                if (code[i] == '6') {
+                    open_braces -= 1;
+                }
+                else if (code[i] == '1') {
+                    open_braces += 1;
+                }
+            }
+            i -= 1;
+        }*/
+        else if (code[i] == 'M') {
+            if (code[i + 1] == '[') {
+                int m_start = i + 2;
+                int m_end = m_start;
+                while (code[m_end] != ']') {
                     m_end++;
-                int m = std::stoi(code.substr(m_start, m_end - m_start));
-                if (pointerLocation + m < 0)
-                {
-                    std::cerr << "Error! Pointer Location is negative." << std::endl;
-                    exit(EXIT_FAILURE);
                 }
-                if (pointerLocation + m >= array.size())
-                {
-                    array.resize(pointerLocation + m + 1, 0);
+                std::string m_str = code.substr(m_start, m_end - m_start);
+                int m = std::stoi(m_str);
+                if (pointerLocation + m < 0) {
+                    std::cout << "Error! Pointer Location is negative." << std::endl;
+                    return;
                 }
-                if (code[i] == 'M')
-                {
-                    std::swap(array[pointerLocation], array[pointerLocation + m]);
+                else if (pointerLocation + m >= array.size()) {
+                    while (array.size() <= pointerLocation + m) {
+                        array.push_back(0);
+                    }
                 }
-                else
-                {
-                    array[pointerLocation + m] = array[pointerLocation];
-                }
+                int temp = array[pointerLocation];
+                array[pointerLocation] = array[pointerLocation + m];
+                array[pointerLocation + m] = temp;
                 i = m_end;
                 pointerLocation += m;
             }
-            else
-            {
-                std::cerr << "Error! Invalid syntax for M/X command." << std::endl;
-                exit(EXIT_FAILURE);
+            else {
+                std::cout << "Error! Invalid syntax for M command." << std::endl;
+                return;
             }
-            break;
         }
-        case '/':
-            std::cerr << "Passed non preprocessed code!" << std::endl;
-            exit(EXIT_FAILURE);
-        case '_':
-            return;
-        case 'x':
-        case 'm':
-        {
-            if (i + 4 < code.length() && code[i + 1] == '[' && (code[i + 2] == '+' || code[i + 2] == '-') &&
-                (code[i + 3] == '0' || code[i + 3] == '1') && code[i + 4] == ']')
-            {
-                int target_index = 0;
-                if (code[i + 2] == '+')
-                {
-                    target_index = array[pointerLocation + 1];
+        else if (code[i] == 'X') {
+            if (code[i + 1] == '[') {
+                int m_start = i + 2;
+                int m_end = m_start;
+                while (code[m_end] != ']') {
+                    m_end++;
                 }
-                else if (code[i + 2] == '-')
-                {
-                    if (pointerLocation == 0)
-                    {
-                        std::cerr << "Error! No left cell available." << std::endl;
-                        exit(EXIT_FAILURE);
+                std::string m_str = code.substr(m_start, m_end - m_start);
+                int m = std::stoi(m_str);
+                if (pointerLocation + m < 0) {
+                    std::cout << "Error! Pointer Location is negative." << std::endl;
+                    return;
+                }
+                else if (pointerLocation + m >= array.size()) {
+                    while (array.size() <= pointerLocation + m) {
+                        array.push_back(0);
                     }
-                    target_index = array[pointerLocation - 1];
                 }
-
-                if (target_index < 0)
-                {
-                    std::cerr << "Error! Invalid target index." << std::endl;
-                    exit(EXIT_FAILURE);
-                }
-
-                if (array.size() <= target_index)
-                {
-                    array.resize(target_index + 1, 0);
-                }
-
-                if (code[i] == 'x')
-                {
-                    array[target_index] = array[pointerLocation];
-                }
-                else
-                {
-                    array[target_index] = array[pointerLocation];
-                    array[pointerLocation] = 0;
-                }
-
-                if (code[i + 3] == '1')
-                {
-                    pointerLocation = target_index;
-                }
-
-                i += 4;
+                array[pointerLocation + m] = array[pointerLocation];
+                i = m_end;
+                pointerLocation += m;
             }
-            break;
+            else {
+                std::cout << "Error! Invalid syntax for M command." << std::endl;
+                return;
+            }
         }
-        case 'G':
+        else if (code[i] == '/' && (i + 1 < code.length()) && code[i + 1] == '*') {
+            i += 2;
+            while (i < code.length() - 1 && !(code[i] == '*' && code[i + 1] == '/')) {
+                i++;
+            }
+            i--;
+            if (i < code.length() - 1) {
+                i += 2;
+            }
+        }
+        else if (code[i] == '_') {
+            return;
+        }
+        else if (code[i] == 'x' && i + 4 < code.length() && code[i + 1] == '[' && (code[i + 2] == '+' || code[i + 2] == '-') && (code[i + 3] == '0' || code[i + 3] == '1') && code[i + 4] == ']') {
+            int target_index = 0;
+            if (code[i + 2] == '+') {
+                target_index = array[pointerLocation + 1];
+            }
+            else if (code[i + 2] == '-') {
+                if (pointerLocation == 0) {
+                    std::cout << "Error! No left cell available." << std::endl;
+                    return;
+                }
+                target_index = array[pointerLocation - 1];
+            }
+
+            if (target_index < 0) {
+                std::cout << "Error! Invalid target index." << std::endl;
+                return;
+            }
+
+            if (array.size() <= target_index) {
+                array.resize(target_index + 1, 0);
+            }
+
+            array[target_index] = array[pointerLocation];
+
+            if (code[i + 3] == '1') {
+                pointerLocation = target_index;
+            }
+
+            i += 4;
+        }
+        else if (code[i] == 'm' && i + 4 < code.length() && code[i + 1] == '[' && (code[i + 2] == '+' || code[i + 2] == '-') && (code[i + 3] == '0' || code[i + 3] == '1') && code[i + 4] == ']') {
+            int target_index = 0;
+            if (code[i + 2] == '+') {
+                target_index = array[pointerLocation + 1];
+            }
+            else if (code[i + 2] == '-') {
+                if (pointerLocation == 0) {
+                    std::cout << "Error! No left cell available." << std::endl;
+                    return;
+                }
+                target_index = array[pointerLocation - 1];
+            }
+
+            if (target_index < 0) {
+                std::cout << "Error! Invalid target index." << std::endl;
+                return;
+            }
+
+            if (array.size() <= target_index) {
+                array.resize(target_index + 1, 0);
+            }
+
+            array[target_index] = array[pointerLocation];
+            array[pointerLocation] = 0;
+
+            if (code[i + 3] == '1') {
+                pointerLocation = target_index;
+            }
+
+            i += 4;
+        }
+        else if (code[i] == 'G') {
             array[pointerLocation] = pointerLocation;
-            break;
-        default:
-            break;
         }
         i += 1;
     }
 }
 
-void arythm(const std::string& code)
-{
+void arythm(std::string code) {
     int nums[1024];
     std::vector<int> actions;
     int pointnow = 0;
     bool actyes = false;
 
-    for (char ch : code)
+    for (int i = 0; i < code.length(); i++)
     {
-        switch (ch)
-        {
-        case 'k':
-            nums[pointnow++] = array[pointerLocation + 1];
-            break;
-        case 'i':
-            nums[pointnow++] = array[pointerLocation - 1];
-            break;
-        case 't':
-            nums[pointnow++] = array[pointerLocation];
-            break;
-        case '+':
+        if (code[i] == 'k') {
+            nums[pointnow] = array[pointerLocation + 1];
+            pointnow += 1;
+        }
+        else if (code[i] == 'i') {
+            nums[pointnow] = array[pointerLocation - 1];
+            pointnow += 1;
+        }
+        else if (code[i] == 't') {
+            nums[pointnow] = array[pointerLocation];
+            pointnow += 1;
+        }
+        else if (code[i] == '+') {
             actions.push_back(1);
             actyes = true;
-            break;
-        case '-':
+        }
+        else if (code[i] == '-') {
             actions.push_back(0);
             actyes = true;
-            break;
-        case '*':
+        }
+        else if (code[i] == '*') {
             actions.push_back(2);
             actyes = true;
-            break;
-        case '%':
+        }
+        else if (code[i] == '%')
+        {
             actions.push_back(3);
             actyes = true;
-            break;
-        default:
-            break;
         }
     }
-
-    if (actyes)
-    {
-        switch (actions[0])
-        {
-        case 0:
+    if (actyes == true) {
+        if (actions[0] == 0) {
             array[pointerLocation] = nums[0] - nums[1];
-            break;
-        case 1:
+        }
+        else if (actions[0] == 1) {
             array[pointerLocation] = nums[0] + nums[1];
-            break;
-        case 2:
+        }
+        else if (actions[0] == 2) {
             array[pointerLocation] = nums[0] * nums[1];
-            break;
-        case 3:
-            if (nums[1] != 0)
-                array[pointerLocation] = nums[0] / nums[1];
-            else
-            {
-                std::cerr << "ERROR! Division by zero!" << std::endl;
-                exit(EXIT_FAILURE);
-            }
-            break;
-        default:
-            break;
+        }
+        else if (actions[0] == 3) {
+            array[pointerLocation] = nums[0] / nums[1];
         }
     }
-    else
-    {
-        std::cerr << "ERROR! Action not found!" << std::endl;
-        exit(EXIT_FAILURE);
+    else {
+        std::cout << "ERROR! Action not found!";
+        exit(0);
     }
 }
 
-void ifFunc(const std::string& code)
-{
+void ifFunc(std::string code) {
     int nums[2];
     int action = 0;
     int pointnow = 0;
     bool ends = false;
     std::string execute = "";
-
-    for (size_t i = 0; i < code.length(); i++)
-    {
-        switch (code[i])
-        {
-        case 'i':
-            nums[pointnow++] = array[pointerLocation - 1];
-            break;
-        case 'k':
-            nums[pointnow++] = array[pointerLocation + 1];
-            break;
-        case 't':
-            nums[pointnow++] = array[pointerLocation];
-            break;
-        case '>':
+    for (int i = 0; i < code.length(); i++) {
+        if (code[i] == 'i') {
+            nums[pointnow] = array[pointerLocation - 1];
+            pointnow += 1;
+        }
+        else if (code[i] == 'k') {
+            nums[pointnow] = array[pointerLocation + 1];
+            pointnow += 1;
+        }
+        else if (code[i] == 't') {
+            nums[pointnow] = array[pointerLocation];
+            pointnow += 1;
+        }
+        else if (code[i] == '>') {
             action = 1;
-            break;
-        case '<':
+        }
+        else if (code[i] == '<') {
             action = 2;
-            break;
-        case '=':
+        }
+        else if (code[i] == '=') {
             action = 0;
-            break;
-        case '~':
+        }
+        else if (code[i] == '~')
+        {
             action = 3;
-            break;
-        case '!':
-            execute = code.substr(i + 1);
+        }
+        else if (code[i] == '!') {
+            execute = code.substr(i + 1, code.length());
+            bool anif1 = false;
+            bool anif2 = false;
+            for (int p = 0; p < execute.length(); p++) {
+                if (execute[p] == '(') {
+                    anif1 = true;
+                    for (int j = 0; j < execute.length(); j++) {
+                        if (execute[j] == ')') {
+                            anif2 = true;
+                        }
+                    }
+                }
+            }
+            if (anif1 == true && anif2 == false)
+            {
+                execute += ')';
+            }
             ends = true;
             break;
-        default:
-            break;
         }
-
-        if (ends)
-            break;
     }
-
-    if (ends)
-    {
-        switch (action)
+    if (ends == true) {
+        if (action == 0) {
+            if (nums[0] == nums[1]) {
+                interpret(execute);
+            }
+        }
+        else if (action == 1) {
+            if (nums[0] > nums[1]) {
+                interpret(execute);
+            }
+        }
+        else if (action == 2) {
+            if (nums[0] < nums[1]) {
+                interpret(execute);
+            }
+        }
+        else if (action == 3)
         {
-        case 0:
-            if (nums[0] == nums[1])
-                interpret(execute);
-            break;
-        case 1:
-            if (nums[0] > nums[1])
-                interpret(execute);
-            break;
-        case 2:
-            if (nums[0] < nums[1])
-                interpret(execute);
-            break;
-        case 3:
             if (nums[0] != nums[1])
+            {
                 interpret(execute);
-            break;
-        default:
-            std::cerr << "Error! Unknown action in ifFunc!" << std::endl;
-            exit(EXIT_FAILURE);
+            }
         }
     }
-    else
-    {
-        std::cerr << "Error! If without body!" << std::endl;
-        exit(EXIT_FAILURE);
+    else {
+        std::cout << "Error! If without body!" << std::endl;
     }
 }
 
@@ -560,7 +639,8 @@ int main()
             interpret(readFile(foil));
             std::cout << std::endl;
             std::cout << "Paused. Press Enter to exit." << std::endl;
-            std::cin.get();
+
+            system("pause");
         }
         else
         {
